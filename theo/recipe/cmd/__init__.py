@@ -23,34 +23,42 @@ import subprocess
 import sys
 
 
-def bicommand(command, showoutput=False, read_bytes=1):
+def bicommand(command, showoutput=False):
     pipe = subprocess.Popen(command, shell=True,
                             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
 
-    output = ""
+    stderr_output = ''
+    stdout_output = ''
+
     while True:
-        to_read, _, _ = select.select([pipe.stdout, pipe.stderr], [], [], 0.1)
-        if len(to_read) == 0:
+        readfds, _, _ = select.select([pipe.stdout, pipe.stderr], [], [], 0.1)
+        if not readfds:
             continue
 
         eof = True
-        for stream in to_read:
-            line = stream.read(read_bytes)
-            if line != "":
+        for stream in readfds:
+            s = stream.readline()
+            if s:
                 eof = False
-            output += line
-            if showoutput:
-                sys.stdout.write(line)
+            if stream == pipe.stderr:
+                stderr_output += s
+                if showoutput:
+                    sys.stderr.write(s)
+            else:
+                stdout_output += s
+                if showoutput:
+                    sys.stdout.write(s)
 
         if eof:
             break
 
-    if output[-1:] == '\n':
-        output = output[:-1]
+    if stdout_output[-1] == '\n':
+        stdout_output = stdout_output[:-1]
 
     status = pipe.wait()
-    return status, output
+    return status, stdout_output
+
 
 
 class CmdExecutionFailed(Exception):

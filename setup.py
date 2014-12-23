@@ -19,7 +19,7 @@ This module contains the tool of theo.recipe.cmd
 """
 from setuptools import find_packages, setup
 
-version = '0.6'
+version = '0.6.1'
 
 name = 'theo.recipe.cmd'
 

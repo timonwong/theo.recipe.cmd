@@ -19,16 +19,15 @@ This module contains the tool of theo.recipe.cmd
 """
 from setuptools import find_packages, setup
 
-version = '0.6.1'
-
 name = 'theo.recipe.cmd'
+version = '0.6.2'
 
 setup(
     name=name,
     version=version,
     description="ZC Buildout recipe to execute commands in it's own shell",
-    long_description=open("README.rst").read() + "\n" + open("CHANGELOG.rst").read(),
-    # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
+    long_description=(open("README.rst").read() + "\n" +
+                      open("CHANGELOG.rst").read()),
     classifiers=[
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
@@ -43,7 +42,6 @@ setup(
     namespace_packages=['theo.recipe', 'theo'],
     include_package_data=True,
     zip_safe=False,
-    test_suite="theo.recipe.cmd.tests.test_cmddocs.test_suite",
     install_requires=[
         'setuptools',
         'zc.buildout',

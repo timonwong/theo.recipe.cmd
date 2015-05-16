@@ -60,7 +60,6 @@ def bicommand(command, showoutput=False):
     return status, stdout_output
 
 
-
 class CmdExecutionFailed(Exception):
     pass
 
@@ -128,13 +127,12 @@ class Python(Cmd):
         if not cmds:
             return
         if cmds:
-            name = self.name
-            buildout = self.buildout
-            options = self.options
             lines = cmds.split('\n')
             lines = [undoc(line) for line in lines if line.strip()]
             dirname = tempfile.mkdtemp()
-            tmpfile = os.path.join(dirname, 'run.py')
-            open(tmpfile, 'w').write('\n'.join(lines))
-            execfile(tmpfile)
-            shutil.rmtree(dirname)
+            try:
+                tmpfile = os.path.join(dirname, 'run.py')
+                open(tmpfile, 'w').write('\n'.join(lines))
+                execfile(tmpfile)
+            finally:
+                shutil.rmtree(dirname)
